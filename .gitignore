@@ -1,1 +1,5 @@
-tripadvisor_hotel_reviews.csv
+# Ignore Python bytecode cache files
+__pycache__/
+
+# Ignore specific files
+tripadvisor_hotel_reviews.csv 
