@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import plotly.graph_objects as go
 import plotly.express as px
-from wordcloud import WordCloud, STOPWORDS
 import re 
 
 class EDA:
@@ -30,5 +29,15 @@ class EDA:
         scatter_plot = px.scatter(self.data, x="reviews_lenght",
                                   y=column, color=column)
         return line_plot, scatter_plot
+    
+    @staticmethod
+    def labelling(x):
+        if x == 3:
+            return "Neutral"
+        elif x<3:
+            return "Negative"
+        else:
+            return "Positive"
+    
 
  
