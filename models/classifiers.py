@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from tqdm import tqdm
 
@@ -18,7 +18,13 @@ class classifiers:
     def model_evaluation(self, x_test, y_test):
         for model in self.models:
             y_pred = model.predict(x_test)
-            print(model,":",accuracy_score(y_test,y_pred)*100)
+            
+            accuracy = accuracy_score(y_test, y_pred)
+            precision = precision_score(y_test, y_pred, average='weighted')
+            recall = recall_score(y_test, y_pred, average='weighted')
+            f1 = f1_score(y_test, y_pred, average='weighted')
+
+            print(f"{model}:\nAccuracy: {accuracy * 100:.2f}%\nPrecision: {precision:.2f}\nRecall: {recall:.2f}\nF1-score: {f1:.2f}\n")
 
 
 
