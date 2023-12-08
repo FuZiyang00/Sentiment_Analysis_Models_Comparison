@@ -51,12 +51,12 @@ if __name__ == "__main__":
         pbar.update(len(x_test))
     
     print("training the classifiers")
-    svm_model = SVC()
-    dt_model = DecisionTreeClassifier()
-    knn_model = KNeighborsClassifier()
+    svm_model = SVC(kernel='rbf', gamma=0.5, C=0.1)
+    dt_model = DecisionTreeClassifier(random_state=42)
+    knn_model = KNeighborsClassifier(n_neighbors=5)
 
     classification = classifiers(svm_model, dt_model, knn_model)
-    classification.models_training(train_tfid_matrix, y_train)
+    classification.models_training(train_tfid_matrix, y_train, 1000)
     classification.model_evaluation(test_tfid_matrix, y_test)
 
 
