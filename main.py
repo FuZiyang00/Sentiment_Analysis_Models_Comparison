@@ -4,7 +4,7 @@ from data_process.data_cleaner import Data_Cleaner
 from models.classifiers import classifiers
 from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
@@ -24,20 +24,13 @@ if __name__ == "__main__":
     statistics, figure = eda.summary_statistics(ratings)
     #line_plot, scatter_plot = eda.variables_relationship(reviews)
     print(df.head(10), "\n")
-
-    print("setence cleaning")
-    cleaner = Data_Cleaner()
-    def clean_text(x):
-        cleaner = Data_Cleaner()
-        return cleaner.stemming(cleaner.stopwords_remover(
-                                        cleaner.special_chars_remover(x)
-        ))
     
-    df[reviews] = df[reviews].progress_apply(clean_text)
+    print("Text cleaning")
+    df[reviews] = df[reviews].progress_apply(Data_Cleaner.text_cleaning)
     print(df.head(10))
-
+    
     print("Training and testing")
-    x_train, x_test, y_train, y_test = train_test_split(df[reviews], df[ratings], test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(df[reviews], df["label"], test_size=0.3, random_state=42)
 
     tfid = TfidfVectorizer()
     # Fit and transform on the training set
@@ -50,14 +43,16 @@ if __name__ == "__main__":
         test_tfid_matrix = tfid.transform(x_test)
         pbar.update(len(x_test))
     
-    print("training the classifiers")
-    svm_model = SVC(kernel='rbf', gamma=0.5, C=0.1)
-    dt_model = DecisionTreeClassifier(random_state=42)
-    knn_model = KNeighborsClassifier(n_neighbors=5)
+    print("training and testing the classifiers")
+    svm_model = SVC(kernel='rbf')
+    dt_model = DecisionTreeClassifier()
+    knn_model = KNeighborsClassifier()
 
     classification = classifiers(svm_model, dt_model, knn_model)
-    classification.models_training(train_tfid_matrix, y_train, 1000)
-    classification.model_evaluation(test_tfid_matrix, y_test)
+    classification.models_training_evaluation(train_tfid_matrix, y_train, test_tfid_matrix, y_test, 500)
+    sentence = tfid.transform([Data_Cleaner.text_cleaning("This hotel is worth every penny!!")])
+    classification.review_prediction(sentence)
+    
 
 
 
