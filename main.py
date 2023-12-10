@@ -63,6 +63,8 @@ if __name__ == "__main__":
     train_labels, test_labels = data_processor.label_encoder(y_train, y_test)
 
     model = RNN_model.create_model(total_word)
+    model.fit(train_padded, train_labels, 
+              epochs=3, validation_data=(test_padded, test_labels))
     RNN_model.model_evaluation(test_padded, test_labels, model)
 
 
