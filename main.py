@@ -6,7 +6,7 @@ from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 
 
@@ -44,11 +44,11 @@ if __name__ == "__main__":
         pbar.update(len(x_test))
     
     print("training and testing the classifiers")
-    svm_model = SVC(kernel='rbf')
-    dt_model = DecisionTreeClassifier()
-    knn_model = KNeighborsClassifier()
+    svm_model = SVC(kernel='rbf', probability=True)
+    log_model = LogisticRegression(probability = True)
+    knn_model = KNeighborsClassifier(probability = True)
 
-    classification = classifiers(svm_model, dt_model, knn_model)
+    classification = classifiers(svm_model, log_model, knn_model)
     classification.models_training_evaluation(train_tfid_matrix, y_train, test_tfid_matrix, y_test, 500)
     sentence = tfid.transform([Data_Cleaner.text_cleaning("This hotel is worth every penny!!")])
     classification.review_prediction(sentence)
