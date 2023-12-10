@@ -1,7 +1,8 @@
 import pandas as pd 
 from data_process.data_exploration import EDA
-from data_process.data_cleaner import Data_Cleaner
+from data_process.data_cleaner import Data_Cleaner, RNN_Data_Process
 from models.classifiers import classifiers
+from models.rnn import RNN_model
 from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -29,9 +30,10 @@ if __name__ == "__main__":
     df[reviews] = df[reviews].progress_apply(Data_Cleaner.text_cleaning)
     print(df.head(10))
     
-    print("Training and testing")
-    x_train, x_test, y_train, y_test = train_test_split(df[reviews], df["label"], test_size=0.3, random_state=42)
-
+    x_train, x_test, y_train, y_test = train_test_split(df[reviews], df["label"], 
+                                                        test_size=0.3, random_state=42)
+    
+    print("Training and testing Classifiers")
     tfid = TfidfVectorizer()
     # Fit and transform on the training set
     with tqdm(total=len(x_train), desc="Fitting and transforming train set") as pbar:
@@ -52,6 +54,19 @@ if __name__ == "__main__":
     classification.models_training_evaluation(train_tfid_matrix, y_train, test_tfid_matrix, y_test, 500)
     sentence = tfid.transform([Data_Cleaner.text_cleaning("This hotel is worth every penny!!")])
     classification.review_prediction(sentence)
+
+    print("Training and testing RNN")
+    data_processor = RNN_Data_Process()
+
+    total_word, train_padded = data_processor.training_tokenizer(x_train)
+    test_padded = data_processor.testing_tokenizer(x_test)
+    train_labels, test_labels = data_processor.label_encoder(y_train, y_test)
+
+    model = RNN_model.create_model(total_word)
+    RNN_model.model_evaluation(test_padded, test_labels, model)
+
+
+
     
 
 
