@@ -45,10 +45,10 @@ if __name__ == "__main__":
     
     print("training and testing the classifiers")
     svm_model = SVC(kernel='rbf', probability=True)
-    log_model = LogisticRegression(probability = True)
-    knn_model = KNeighborsClassifier(probability = True)
+    #log_model = LogisticRegression(probability = True)
+    #knn_model = KNeighborsClassifier(probability = True)
 
-    classification = classifiers(svm_model, log_model, knn_model)
+    classification = classifiers(svm_model)
     classification.models_training_evaluation(train_tfid_matrix, y_train, test_tfid_matrix, y_test, 500)
     sentence = tfid.transform([Data_Cleaner.text_cleaning("This hotel is worth every penny!!")])
     classification.review_prediction(sentence)

@@ -1,8 +1,7 @@
 from sklearn.metrics import classification_report
 from tqdm import tqdm 
 import numpy as np
-from data_process.data_cleaner import Data_Cleaner
-from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 class classifiers: 
     def __init__(self, *args):
