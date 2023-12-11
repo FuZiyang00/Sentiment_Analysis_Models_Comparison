@@ -3,6 +3,8 @@ from keras.models import Sequential
 from keras.layers import SimpleRNN, Dense, Embedding
 import numpy as np
 from sklearn.metrics import classification_report
+from data_process.data_cleaner import RNN_Data_Process, Data_Cleaner
+from sklearn.preprocessing import LabelBinarizer
 
 
 class RNN_model:
@@ -24,5 +26,3 @@ class RNN_model:
         true_labels = np.argmax(test_labels, axis=-1)
         pred_labels = np.argmax(predictions, axis=-1)
         print(classification_report(true_labels, pred_labels))
-
-

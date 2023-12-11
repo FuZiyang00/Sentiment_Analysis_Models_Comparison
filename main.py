@@ -12,24 +12,23 @@ from sklearn.svm import SVC
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("tripadvisor_hotel_reviews.csv")
+    print("since cleaning the text everytime is time consuming we save a dataframe with cleaned reviews")
+    df = pd.read_csv("clean_reviews.csv")
     ratings = "Rating"
     reviews = "Review"
-    # print(df.head(10), "\n")
     tqdm.pandas()
-
+    print(df.head(10), "\n")
     print("Eploratory Data Analysis: ")
     eda = EDA(df)
-    df["label"] = df[ratings].apply(lambda x: eda.labelling(x))
     shape, duplicates, info = eda.dataset_info()
-    statistics, figure = eda.summary_statistics(ratings)
-    #line_plot, scatter_plot = eda.variables_relationship(reviews)
-    print(df.head(10), "\n")
-    
+    df["label"] = df[ratings].apply(lambda x: eda.labelling(x))
+    """
+    df = pd.read_csv("tripadvisor_hotel_reviews.csv")
     print("Text cleaning")
     df[reviews] = df[reviews].progress_apply(Data_Cleaner.text_cleaning)
-    print(df.head(10))
-    
+    df.to_csv('clean_reviews.csv', index='False')
+    """
+    # splitting into training and test set 
     x_train, x_test, y_train, y_test = train_test_split(df[reviews], df["label"], 
                                                         test_size=0.3, random_state=42)
     
@@ -47,14 +46,22 @@ if __name__ == "__main__":
     
     print("training and testing the classifiers")
     svm_model = SVC(kernel='rbf', probability=True)
-    #log_model = LogisticRegression(probability = True)
-    #knn_model = KNeighborsClassifier(probability = True)
+    log_model = LogisticRegression()
+    knn_model = KNeighborsClassifier()
 
-    classification = classifiers(svm_model)
+    # Training and evaluating the performances of the selected model(s)
+    classification = classifiers(svm_model, log_model, knn_model)
     classification.models_training_evaluation(train_tfid_matrix, y_train, test_tfid_matrix, y_test, 500)
-    sentence = tfid.transform([Data_Cleaner.text_cleaning("This hotel is worth every penny!!")])
-    classification.review_prediction(sentence)
 
+    # testing the models on a random review
+    sentence = "This hotel is worth every penny!!"
+    processed_sentence = tfid.transform([Data_Cleaner.text_cleaning(sentence)])
+    models, predictions, probabilities = classification.review_prediction(processed_sentence)
+    for i in range(len(models)):
+        print(models[i])
+        print("{}: {} with probability {}".format(sentence, predictions[i], probabilities[i]))
+
+    # Training and evaluating the performances of the Recurrent Neural Network 
     print("Training and testing RNN")
     data_processor = RNN_Data_Process()
 
@@ -64,8 +71,17 @@ if __name__ == "__main__":
 
     model = RNN_model.create_model(total_word)
     model.fit(train_padded, train_labels, 
-              epochs=3, validation_data=(test_padded, test_labels))
+              epochs=1, validation_data=(test_padded, test_labels))
     RNN_model.model_evaluation(test_padded, test_labels, model)
+
+    # testing the model on a random review
+    sentence = "I don't even want a refund from this place..."
+    processsed_sentence = data_processor.testing_tokenizer([Data_Cleaner.text_cleaning(sentence)])
+    prediction = model.predict(processsed_sentence)
+    result = data_processor.label_binarizer.inverse_transform(prediction)[0]
+    print("{}: {}".format(sentence, result))
+
+
 
 
 

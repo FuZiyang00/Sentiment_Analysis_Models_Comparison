@@ -2,7 +2,6 @@ from sklearn.metrics import classification_report
 from tqdm import tqdm 
 import numpy as np
 
-
 class classifiers: 
     def __init__(self, *args):
         self.models = list(args)
@@ -25,11 +24,17 @@ class classifiers:
             print(classification_report(y_test, y_pred, zero_division=1))
     
     def review_prediction(self, sentence):
+        models = []
+        predictions = []
+        probabilites = []
         for model in self.models:
             pred_probabilities = model.predict_proba(sentence)
             idx = np.argmax(pred_probabilities)
             pred = model.classes_[idx]
-            print("{}: {} with {}".format(model, pred, pred_probabilities))
+            models.append(model)
+            predictions.append(pred)
+            probabilites.append(pred_probabilities[0][idx])
+        return models, predictions, probabilites 
 
 
 
