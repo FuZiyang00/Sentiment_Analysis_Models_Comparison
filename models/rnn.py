@@ -3,9 +3,6 @@ from keras.models import Sequential
 from keras.layers import SimpleRNN, Dense, Embedding
 import numpy as np
 from sklearn.metrics import classification_report
-from data_process.data_cleaner import RNN_Data_Process, Data_Cleaner
-from sklearn.preprocessing import LabelBinarizer
-
 
 class RNN_model:
     @staticmethod
