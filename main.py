@@ -9,6 +9,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+import requests
+import zipfile
+import os
 
 
 if __name__ == "__main__":
@@ -32,6 +35,7 @@ if __name__ == "__main__":
     x_train, x_test, y_train, y_test = train_test_split(df[reviews], df["label"], 
                                                         test_size=0.3, random_state=42)
     
+    """
     print("Training and testing Classifiers")
     tfid = TfidfVectorizer()
     # Fit and transform on the training set
@@ -80,6 +84,26 @@ if __name__ == "__main__":
     prediction = model.predict(processsed_sentence)
     result = data_processor.label_binarizer.inverse_transform(prediction)[0]
     print("{}: {}".format(sentence, result))
+    """
+
+    url = "http://downloads.cs.stanford.edu/nlp/data/glove.6B.zip" 
+    response = requests.get(url)
+
+    with open("glove.6B.zip", "wb") as f:
+        f.write(response.content)
+
+    # Specify the path to the downloaded zip file
+    zip_file_path = "glove.6B.zip"
+
+    # Specify the directory where you want to extract the contents (current working directory)
+    extracted_dir = "."
+
+    # Open the zip file
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        # Extract all the contents into the target directory
+        zip_ref.extractall(extracted_dir)
+
+    print(f"Files extracted to {extracted_dir}")
 
 
 
