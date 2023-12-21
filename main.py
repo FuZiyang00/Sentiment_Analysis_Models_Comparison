@@ -1,8 +1,8 @@
 import pandas as pd 
 from data_process.data_exploration import EDA
-from data_process.data_cleaner import Data_Cleaner, RNN_Data_Process, LSTM_data_process
+from data_process.data_cleaner import Data_Cleaner, Data_processor
 from models.classifiers import classifiers
-from models.rnn import RNN_model
+from models.rnn import RNN
 from models.lstm import LSTM
 from tqdm import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     train_df, val_df, test_df = train_df[:split_index_1], train_df[split_index_1:split_index_2], train_df[split_index_2:]
 
-    training_data_processor = LSTM_data_process(words_embeddings, train_df)
+    training_data_processor = Data_processor(words_embeddings, train_df)
     X_train, y_train = training_data_processor.columns_processor()
 
     # determing the maximum lenght of a review 
@@ -65,17 +65,20 @@ if __name__ == "__main__":
     print(X_train.shape)
 
     print("validation set")
-    validation_data_processor = LSTM_data_process(words_embeddings, val_df)
+    validation_data_processor = Data_processor(words_embeddings, val_df)
     X_val, y_val = validation_data_processor.columns_processor()
     X_val = validation_data_processor.vectors_padding(X_val, max_length)
     print(X_val.shape)
 
     print("test set")
-    test_data_processor = LSTM_data_process(words_embeddings, test_df)
+    test_data_processor = Data_processor(words_embeddings, test_df)
     X_test, y_test = test_data_processor.columns_processor()
     X_test = test_data_processor.vectors_padding(X_test, max_length)
     print(X_test.shape)
 
+    # enconding the test labels
+    y_train, y_val, y_test = test_data_processor.label_encoder(y_train, y_val, y_test)
+ 
     # Before the code that produces warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
     frequencies = pd.value_counts(train_df['label']) 
@@ -84,10 +87,18 @@ if __name__ == "__main__":
                1: total_samples / frequencies[1], 
                2: total_samples / frequencies[2]}
     
+    print("RNN training")
+    RNN_model = RNN(X_train, y_train, X_val, y_val, X_test, y_test)
+    RNN_model.model_training(weights)
+    RNN_model.model_evaluation()
+
+    print("LSTM training")
     LSTM_model = LSTM(X_train, y_train, X_val, y_val, X_test, y_test)
     LSTM_model.model_training(weights)
     LSTM_model.model_evaluation()
     warnings.simplefilter(action='default', category=FutureWarning)
+
+
     
     
 

@@ -23,7 +23,7 @@ class LSTM:
         model.add(layers.LSTM(64, return_sequences=True))
         model.add(layers.Dropout(0.2))
         model.add(layers.Flatten())
-        model.add(layers.Dense(1, activation='sigmoid'))
+        model.add(layers.Dense(3, activation='softmax'))
 
         model.compile(optimizer=Adam(learning_rate=0.0001), 
               loss='categorical_crossentropy', 
