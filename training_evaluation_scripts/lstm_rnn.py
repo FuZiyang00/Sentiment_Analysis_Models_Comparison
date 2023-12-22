@@ -14,12 +14,9 @@ class Neural_Networks:
         sequence_lengths = []
         for i in range(len(X_train)):
             sequence_lengths.append(len(X_train[i]))
-        print(pd.Series(sequence_lengths).describe())
-
-        # TODO: cercare come recuperare la lunghezza massima di una sequenza 
-        # TODO: direttamente dal pd.Series
-        # padding the training set based on the maximum lenght of a review
-        max_length = 1604
+        describe_output = pd.Series(sequence_lengths).describe()
+        print(describe_output)
+        max_length = describe_output['max']
         X_train = training_data_processor.vectors_padding(X_train, max_length)
         print(X_train.shape)
 

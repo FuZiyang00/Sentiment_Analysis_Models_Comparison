@@ -8,7 +8,7 @@ from data_process.data_cleaner import Data_Cleaner
 
 class Classifiers: 
     @staticmethod
-    def classification_methods(X_train, y_train, X_test, y_test, test_sentence):
+    def classification_methods(X_train, y_train, X_test, y_test, outputfile, test_sentence):
 
         tfid = TfidfVectorizer()
         X_train = tfid.fit_transform(X_train)
@@ -20,7 +20,7 @@ class Classifiers:
 
         classification = classifiers(svm_model, log_model, knn_model)
         classification.models_training(X_train, y_train, 500)
-        classification.models_evaluation(X_test, y_test)
+        classification.models_evaluation(X_test, y_test, outputfile)
 
         processed_sentence = tfid.transform([Data_Cleaner.text_cleaning(test_sentence)])
         models, predictions, probabilities = classification.review_prediction(processed_sentence)

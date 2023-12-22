@@ -32,8 +32,10 @@ if __name__ == "__main__":
 
     logger.info("Using classification techniques")
     X_train, X_test, y_train, y_test = train_test_split(df['Review'], df['label'], test_size=0.2)
+    output_file = "report.txt"
     test_sentence = "I love how this hotel is not worthy"
-    Classifiers.classification_methods(X_train, y_train, X_test, y_test, test_sentence)
+    Classifiers.classification_methods(X_train, y_train, X_test, y_test, 
+                                       output_file,test_sentence)
 
     logger.info("Using RNN and LSTM")
 
