@@ -3,8 +3,9 @@ from keras.optimizers import Adam
 from keras.metrics import AUC
 from keras.models import Sequential
 from sklearn.metrics import classification_report
+from .lstm import LSTM
 
-class RNN:
+class RNN(LSTM):
 
     def __init__(self, X_train, y_train, X_val, y_val, X_test, y_test):
         self.X_train = X_train
