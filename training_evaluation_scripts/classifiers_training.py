@@ -1,6 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm import tqdm
-from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -9,7 +8,7 @@ from data_process.data_cleaner import Data_Cleaner
 
 class Classifiers: 
     @staticmethod
-    def cls_training(X_train, y_train, X_test, y_test, test_sentence):
+    def classification_methods(X_train, y_train, X_test, y_test, test_sentence):
 
         tfid = TfidfVectorizer()
         # Fit and transform on the training set

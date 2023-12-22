@@ -6,7 +6,7 @@ import warnings
 
 class Neural_Networks: 
     @staticmethod
-    def NNS_training(train_df, val_df, test_df, words_embeddings):
+    def Neural_Networks(train_df, val_df, test_df, words_embeddings):
         # processsing the training data
         training_data_processor = Data_processor(words_embeddings, train_df)
         X_train, y_train = training_data_processor.columns_processor()
