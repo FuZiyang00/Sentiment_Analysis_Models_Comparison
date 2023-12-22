@@ -11,15 +11,8 @@ class Classifiers:
     def classification_methods(X_train, y_train, X_test, y_test, test_sentence):
 
         tfid = TfidfVectorizer()
-        # Fit and transform on the training set
-        with tqdm(total=len(X_train), desc="Fitting and transforming train set") as pbar:
-            X_train = tfid.fit_transform(X_train)
-            pbar.update(len(X_train))
-        
-        # Transform on the test set
-        with tqdm(total=len(X_test), desc="Transforming test set") as pbar:
-            X_test = tfid.transform(X_test)
-            pbar.update(len(X_test))
+        X_train = tfid.fit_transform(X_train)
+        X_test = tfid.transform(X_test)
         
         svm_model = SVC(kernel='rbf', probability=True)
         log_model = LogisticRegression()

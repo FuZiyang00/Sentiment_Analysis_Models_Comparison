@@ -5,7 +5,6 @@ import numpy as np
 class classifiers: 
     def __init__(self, *args):
         self.models = list(args)
-        self.models_list = [self.models_training()]
 
     def models_training(self, x_train, y_train, batch_size):
         for model in self.models:
@@ -15,11 +14,9 @@ class classifiers:
                     end_idx = min(i + batch_size, x_train.shape[0])
                     model.fit(x_train[i:end_idx], y_train[i:end_idx])
                     pbar.update(end_idx - i)
-                    yield model
     
     def models_evaluation(self, X_test, y_test):
-        
-        for model in self.models_list:
+        for model in self.models:
             # model evaluation
             test_acc = model.score(X_test, y_test)
             print('Accuracy score on testing data  of {}: {}'.format(model, test_acc))
