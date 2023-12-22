@@ -25,6 +25,7 @@ if __name__ == "__main__":
     df = pd.read_csv("clean_reviews.csv")
     tqdm.pandas()
     print(df.head(10), "\n")
+    output_file = "report.txt"
 
     logger.info("Exploratory data analysis")
     eda = EDA(df)
@@ -32,7 +33,6 @@ if __name__ == "__main__":
 
     logger.info("Using classification techniques")
     X_train, X_test, y_train, y_test = train_test_split(df['Review'], df['label'], test_size=0.2)
-    output_file = "report.txt"
     test_sentence = "I love how this hotel is not worthy"
     Classifiers.classification_methods(X_train, y_train, X_test, y_test, 
                                        output_file,test_sentence)
@@ -75,6 +75,6 @@ if __name__ == "__main__":
     split_index_1 = int(len(df) * 0.7)
     split_index_2 = int(len(df) * 0.85)
     train_df, val_df, test_df = df[:split_index_1], df[split_index_1:split_index_2], df[split_index_2:]
-    Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings)
+    Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings, output_file)
     
 

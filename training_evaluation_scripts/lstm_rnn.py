@@ -6,7 +6,7 @@ import warnings
 
 class Neural_Networks: 
     @staticmethod
-    def Neural_Networks(train_df, val_df, test_df, words_embeddings):
+    def Neural_Networks(train_df, val_df, test_df, words_embeddings, outputfile):
         # processsing the training data
         training_data_processor = Data_processor(words_embeddings, train_df)
         X_train, y_train = training_data_processor.columns_processor()
@@ -44,10 +44,10 @@ class Neural_Networks:
         # training the LSTM model 
         LSTM_model = LSTM(X_train, y_train, X_val, y_val, X_test, y_test)
         LSTM_model.model_training(weights)
-        LSTM_model.model_evaluation()
+        LSTM_model.model_evaluation(outputfile)
 
         # training the RNN model 
         RNN_model = RNN(X_train, y_train, X_val, y_val, X_test, y_test)
         RNN_model.model_training(weights)
-        RNN_model.model_evaluation()
+        RNN_model.model_evaluation(outputfile)
         
