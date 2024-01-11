@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # df = pd.read_csv("tripadvisor_hotel_reviews.csv")
     # print("Text cleaning")
     # df["Review"] = df["Review"].progress_apply(Data_Cleaner.text_cleaning)
-
+    l = 0
     df = pd.read_csv("clean_reviews.csv")
     tqdm.pandas()
     print(df.head(10), "\n")
