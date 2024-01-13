@@ -76,5 +76,7 @@ if __name__ == "__main__":
     split_index_2 = int(len(df) * 0.85)
     train_df, val_df, test_df = df[:split_index_1], df[split_index_1:split_index_2], df[split_index_2:]
     Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings, output_file)
-    
+    #TODO: 1.parallelize the sentence cleaning process 
+    #TODO: 2.minor fixes to the report.txt
+    #TODO: 3. !important class weighting methods (check statistics class slides) 
 
