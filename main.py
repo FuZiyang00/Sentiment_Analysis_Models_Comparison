@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # Set TensorFlow logging level to suppress warnings
 tf.get_logger().setLevel(logging.ERROR)
+
 if __name__ == "__main__":
 
     logger.info("Loading data and cleaning the reviews")
@@ -39,7 +40,7 @@ if __name__ == "__main__":
 
     logger.info("Using classification techniques")
     X_train, X_test, y_train, y_test = train_test_split(df['Review'], df['label'], test_size=0.2)
-    test_sentence = "I love how this hotel is not worthy"
+    test_sentence = "I love how this hotel, but the furitures could be better."
     Classifiers.classification_methods(X_train, y_train, X_test, y_test, 
                                        output_file,test_sentence)
 
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         f.write(response.content)
 
     zip_file_path = "glove.6B.zip"
-    # Specify the directory where you want to extract the contents (current working directory)
+    # directory where to extract the contents (current working directory)
     extracted_dir = "."
 
     with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
@@ -79,7 +80,6 @@ if __name__ == "__main__":
     split_index_2 = int(len(df) * 0.85)
     train_df, val_df, test_df = df[:split_index_1], df[split_index_1:split_index_2], df[split_index_2:]
     Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings, output_file)
-    #TODO: 1.parallelize the sentence cleaning process 
-    #TODO: 2.minor fixes to the report.txt
+
     #TODO: 3. !important class weighting methods (check statistics class slides) 
 

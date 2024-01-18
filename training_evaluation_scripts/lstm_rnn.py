@@ -10,12 +10,12 @@ class Neural_Networks:
         # processsing the training data
         training_data_processor = Data_processor(words_embeddings, train_df)
         X_train, y_train = training_data_processor.columns_processor()
+
         # determing the maximum lenght of a review 
         sequence_lengths = []
         for i in range(len(X_train)):
             sequence_lengths.append(len(X_train[i]))
         describe_output = pd.Series(sequence_lengths).describe()
-        print(describe_output)
         max_length = describe_output['max']
         X_train = training_data_processor.vectors_padding(X_train, max_length)
         print(X_train.shape)
@@ -36,6 +36,8 @@ class Neural_Networks:
         y_train, y_val, y_test = test_data_processor.label_encoder(y_train, y_val, y_test)
         warnings.simplefilter(action='ignore', category=FutureWarning)
         frequencies = pd.value_counts(train_df['label']) 
+
+        # unbalanced classes: class weighting is needed to avoid biasesS
         total_samples = frequencies.sum()
         weights = {0: total_samples / frequencies[0], 
                 1: total_samples / frequencies[1], 
