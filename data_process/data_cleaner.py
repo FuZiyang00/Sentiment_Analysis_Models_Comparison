@@ -1,3 +1,6 @@
+import nltk
+nltk.download('wordnet')
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import numpy as np
@@ -24,6 +27,17 @@ class Data_Cleaner:
             sentence.append(lemmatizer.lemmatize(word, 'v'))
 
         return ' '.join(sentence)
+    
+    # Split the DataFrame into chunks for parallel processing
+    @staticmethod
+    def split_dataframe(df, num_chunks):
+        chunk_size = len(df) // num_chunks
+        return [df.iloc[i:i + chunk_size] for i in range(0, len(df), chunk_size)]
+
+    # Function to apply text cleaning to a DataFrame chunk
+    def process_chunk(chunk):
+        chunk['Review'] = chunk['Review'].progress_apply(Data_Cleaner.text_cleaning)
+        return chunk
 
 class Data_processor:
 
