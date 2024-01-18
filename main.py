@@ -10,7 +10,6 @@ from training_evaluation_scripts.lstm_rnn import Neural_Networks
 import numpy as np
 import requests
 import zipfile
-import os 
 import tensorflow as tf
 
 # Configure logging
