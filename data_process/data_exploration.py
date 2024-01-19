@@ -41,11 +41,15 @@ class EDA:
         fig = px.histogram(self.data, x=column)
         self._save_plot(fig, f'summary_statistics_{column}')
 
-    def variables_relationship(self, reviews, rating): 
+    def variables_relationship(self, reviews, rating, eda_file): 
+
         # investigating over possible relationships between reviews lenght 
         # and the Y (rating)
-
         self.data["reviews_lenght"] = self.data[reviews].apply(len)
+        review_lengh = 'reviews_lenght'
+
+        self.summary_statistics(review_lengh, eda_file)
+        
         scatter = 'scatterplot'
         # scatter plot 
         scatter_plot = px.scatter(self.data, x="reviews_lenght",

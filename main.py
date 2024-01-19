@@ -34,12 +34,10 @@ if __name__ == "__main__":
 
     # Information about the dataset 
     eda.dataset_info(eda_file)
-    # information about the review column
-    eda.summary_statistics(review, eda_file)
     # information about the label colum
     eda.summary_statistics(rating, eda_file)
     # Investigating possible relationships between reviews lenght and the rating
-    eda.variables_relationship(review, rating)
+    eda.variables_relationship(review, rating, eda_file)
 
 
     logger.info('Reviews cleaning')
@@ -98,5 +96,4 @@ if __name__ == "__main__":
     Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings, output_file)
 
     #TODO:!important class weighting methods (check statistics class slides) 
-    #TODO: Fix the exploratory data analysis module: save all the plots in a plot folder and the dataset info a txt file
 
