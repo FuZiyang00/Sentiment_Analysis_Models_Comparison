@@ -6,5 +6,7 @@ __pycache__/
 
 # Ignore txt files
 report.txt
+EDA.txt
 *.zip
 /Sentiment/
+/plot/

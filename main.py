@@ -11,6 +11,7 @@ import numpy as np
 import requests
 import zipfile
 import tensorflow as tf
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,12 +21,30 @@ tf.get_logger().setLevel(logging.ERROR)
 
 if __name__ == "__main__":
 
-    logger.info("Loading data and cleaning the reviews")
+    logger.info("Loading data")
     tqdm.pandas()
     df = pd.read_csv("tripadvisor_hotel_reviews.csv")
-    df_chunks = Data_Cleaner.split_dataframe(df, 4)
 
+    logger.info("Exploratory data analysis")
+    eda = EDA(df)
+    df["label"] = df["Rating"].apply(lambda x: eda.labelling(x))
+    eda_file = 'EDA.txt'
+    review = 'Review'
+    rating = 'label'
+
+    # Information about the dataset 
+    eda.dataset_info(eda_file)
+    # information about the review column
+    eda.summary_statistics(review, eda_file)
+    # information about the label colum
+    eda.summary_statistics(rating, eda_file)
+    # Investigating possible relationships between reviews lenght and the rating
+    eda.variables_relationship(review, rating)
+
+
+    logger.info('Reviews cleaning')
     # Use a Pool to parallelize the processing
+    df_chunks = Data_Cleaner.split_dataframe(df, 4)
     with Pool(4) as pool:
         processed_chunks = list(tqdm(pool.imap(Data_Cleaner.process_chunk, df_chunks), total=4))
 
@@ -34,9 +53,6 @@ if __name__ == "__main__":
     
     print(df.head(10), "\n")
     output_file = "report.txt"
-    
-    eda = EDA(df)
-    df["label"] = df["Rating"].apply(lambda x: eda.labelling(x))
 
     logger.info("Using classification techniques")
     X_train, X_test, y_train, y_test = train_test_split(df['Review'], df['label'], test_size=0.2)
@@ -81,5 +97,6 @@ if __name__ == "__main__":
     train_df, val_df, test_df = df[:split_index_1], df[split_index_1:split_index_2], df[split_index_2:]
     Neural_Networks.Neural_Networks(train_df, val_df, test_df, words_embeddings, output_file)
 
-    #TODO: 3. !important class weighting methods (check statistics class slides) 
+    #TODO:!important class weighting methods (check statistics class slides) 
+    #TODO: Fix the exploratory data analysis module: save all the plots in a plot folder and the dataset info a txt file
 
