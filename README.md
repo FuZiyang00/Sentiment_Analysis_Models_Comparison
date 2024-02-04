@@ -16,3 +16,25 @@ Performances
 |**LOGISTIC REGRESSION**|0.71|0.71|0.71|
 |**RNN**|0.67|0.67|0.67|
 |**LSTM**|0.46|0.33|0.48|
+
+## Project Structure
+
+```
+project-root/
+│
+├── src/
+│ ├── classification_models.py
+│ └── data_processing.py
+│ └── deep_learning.py
+| └── EDA.py
+|
+│── build.sh
+├── classification.ipynb
+├── deep_models.ipynb
+├── requirements.txt
+└── README.md
+```
+## Installation 
+```
+chmod +x build.sh && ./build.sh
+```
