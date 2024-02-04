@@ -14,8 +14,8 @@ The employed dataset can be found at the following link: https://www.kaggle.com/
 | **SVM**      | 0.73| 0.72 |0.72|
 |**KNEIGHBOURS**|0.56|0.56|0.56|
 |**LOGISTIC REGRESSION**|0.71|0.71|0.71|
-|**RNN**|0.67|0.67|0.67|
-|**LSTM**|0.46|0.33|0.48|
+|**RNN**|0.46|0.33|0.48|
+|**LSTM**|0.67|0.67|0.67|
 
 ## Project Structure
 
