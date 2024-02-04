@@ -6,8 +6,8 @@ The goal of this project is to analyze the performance of different machine lear
 The models tested were the following: SVM, K Nearest neighbours, Logistic Regression, RNN, LSTM.
 
 The employed dataset can be found at the following link: https://www.kaggle.com/datasets/andrewmvd/trip-advisor-hotel-reviews 
-# Results 
-Performances
+
+## Performances
 -------
 | MODEL|PRECISION| RECALL| F-SCORE|
 | :-------------:|:-------------:| :-------------:|:-------------:|
