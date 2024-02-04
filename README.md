@@ -1,3 +1,4 @@
+![Alt text](https://d3caycb064h6u1.cloudfront.net/wp-content/uploads/2021/06/sentimentanalysishotelgeneric-2048x803-1.jpg)
 # Sentiment Analysis Models Comparison
 The goal of this project is to analyze the performance of different machine learning and deep learning models in predicting sentiment related to TripAdvisor reviews. The models tested were the following: SVM, K Nearest neighbours, Logistic Regression, RNN, LSTM.
 
