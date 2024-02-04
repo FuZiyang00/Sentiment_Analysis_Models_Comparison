@@ -34,6 +34,7 @@ class EDA:
         # Write statistics to the output file
         with open(eda_file, 'a') as f:
             print(f"Summary Statistics for {column}:", file=f)
+            print("\n", file=f)
             print(statistics, file=f)
             print("\n", file=f)
         
@@ -56,12 +57,3 @@ class EDA:
                                   y=rating)
         
         self._save_plot(scatter_plot, f'{scatter}')
-    
-    @staticmethod
-    def labelling(x):
-        if x == 3:
-            return "Neutral"
-        elif x<3:
-            return "Negative"
-        else:
-            return "Positive"

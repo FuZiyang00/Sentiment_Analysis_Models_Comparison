@@ -1,49 +1,61 @@
-import nltk
-nltk.download('wordnet')
-nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import numpy as np
 import string
 from keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelBinarizer
-from keras.preprocessing.text import Tokenizer
 from copy import deepcopy 
 from tqdm import tqdm
+from multiprocessing import Process, Manager
+import pandas as pd
 
-class Data_Cleaner:
+class Text_processor:
     @staticmethod
     def text_cleaning(review):
-        #remove punctuations and uppercase
-        clean_text = review.translate(str.maketrans('','',string.punctuation)).lower()
-        
-        #remove stopwords
+        clean_text = review.translate(str.maketrans('', '', string.punctuation)).lower()
         clean_text = [word for word in clean_text.split() if word not in stopwords.words('english')]
-        
-        #lemmatize the word
-        sentence = []
-        for word in clean_text:
-            lemmatizer = WordNetLemmatizer()
-            sentence.append(lemmatizer.lemmatize(word, 'v'))
-
+        sentence = [WordNetLemmatizer().lemmatize(word, 'v') for word in clean_text]
         return ' '.join(sentence)
     
-    # Split the DataFrame into chunks for parallel processing
     @staticmethod
-    def split_dataframe(df, num_chunks):
-        chunk_size = len(df) // num_chunks
-        return [df.iloc[i:i + chunk_size] for i in range(0, len(df), chunk_size)]
+    def process_chunks(shared_df, idx):
+        chunk = shared_df[idx]
+        chunk['Review'] = chunk['Review'].apply(Text_processor.text_cleaning)
+        shared_df[idx] = chunk  # Update the shared_df with the processed chunk
+        print(f'Chunk {idx} has been processed')
 
-    # Function to apply text cleaning to a DataFrame chunk
-    def process_chunk(chunk):
-        chunk['Review'] = chunk['Review'].progress_apply(Data_Cleaner.text_cleaning)
-        return chunk
+    @staticmethod
+    def parallel_text_cleaning(df_chunks): 
+        with Manager() as manager:
+            shared_df = manager.list(df_chunks) # each process has it's own memory space
+            
+            processes = []
+            for i in range(4):
+                process = Process(target=Text_processor.process_chunks, args=(shared_df, i))
+                processes.append(process)
+                process.start()
 
-class Data_processor:
+            for process in processes:
+                process.join()
 
-    def __init__(self, embeddings_dict, df):
+            cleaned_df = pd.concat(shared_df, ignore_index=True)
+        
+        return cleaned_df
+    
+    @staticmethod
+    def labelling(x):
+        if x == 3:
+            return "Neutral"
+        elif x<3:
+            return "Negative"
+        else:
+            return "Positive"
+
+
+class Embeddings_processor:
+
+    def __init__(self, embeddings_dict):
         self.embeddings_dict = embeddings_dict
-        self.df = df
 
     def word_vectors(self, review): 
         processed_tokens = review.split()
@@ -58,23 +70,8 @@ class Data_processor:
         
         return np.array(vectors, dtype=float)
     
-    def columns_processor(self):
-        label_mapping = {'Positive': 2, 'Negative': 0, "Neutral":1}
-        self.df['label'] = self.df['label'].map(label_mapping)
-        y = self.df['label'].to_numpy().astype(int)
-        all_word_vector_sequences = []
-
-        for message in self.df['Review']:
-            message_as_vector_seq = self.word_vectors(message)
-            
-            if message_as_vector_seq.shape[0] == 0:
-                message_as_vector_seq = np.zeros(shape=(1, 50))
-
-            all_word_vector_sequences.append(message_as_vector_seq)
-        
-        return all_word_vector_sequences, y
-    
-    def vectors_padding(self, X_train, sequence_length, batch_size=32):
+    @staticmethod
+    def vectors_padding(X_train, sequence_length, batch_size=32):
         num_samples = len(X_train)
         num_batches = (num_samples + batch_size - 1) // batch_size
 
@@ -99,7 +96,7 @@ class Data_processor:
                     else:
                         X_copy[start_idx + i] = x
 
-                    pbar.update(1)
+                pbar.update(1)
 
         return np.array(X_copy).astype(np.float32)
     
@@ -111,9 +108,3 @@ class Data_processor:
         encoded_y_test = label_binarizer.transform(y_test)
 
         return encoded_y_train, encoded_y_val, encoded_y_test
-         
-
-
-
-
-                
